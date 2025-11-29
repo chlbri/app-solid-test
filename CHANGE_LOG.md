@@ -3,6 +3,23 @@
 <br/>
 <br/>
 
+<details>
+<summary>
+
+## **[0.2.1] - 2025/11/29** => _17:30_
+
+</summary>
+
+- Add peer dependencies for better compatibility (`solid-js`,
+  `vite-plugin-solid`, `jsdom`)
+- Enhance package configuration with explicit peer dependencies
+- Update dependencies management
+- <u>Test coverage **_100%_**</u>
+
+</details>
+
+<br/>
+
 ### Version [0.0.1] --> _date & hour_
 
 - ✨ Première version de la bibliothèque

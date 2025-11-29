@@ -1,6 +1,135 @@
-# Beatifull lib
+# @bemedev/app-solid-test
 
-A beautifull description
+A comprehensive testing library for `@bemedev/app-solid` state machines and
+interpreters.
+
+<br/>
+
+## Features
+
+- 🧪 Test state machine interpreters with Vitest
+- 🔄 Test state transitions, context changes, and UI thread updates
+- ⏱️ Built-in fake timer support (`createFakeWaiter`)
+- 🎯 Convenient test helpers (`testBy`, `matches`, `contains`, `hasTags`)
+- 🚀 Easy assertion helpers for values, context, and UI state
+- 📊 Full support for parallel states and hierarchical state machines
+
+<br/>
+
+## Installation
+
+```bash
+pnpm add -D @bemedev/app-solid-test
+```
+
+<br/>
+
+## Usage
+
+### Basic Example
+
+```typescript
+import { createInterpreter } from '@bemedev/app-solid';
+import { createTests } from '@bemedev/app-solid-test';
+
+vi.useFakeTimers();
+
+describe('My state machine', () => {
+  const interpreter = createInterpreter({
+    machine: myMachine,
+    options: {
+      context: { count: 0 },
+    },
+  });
+
+  const inter = createTests(vi, interpreter);
+  const testValue = inter.testBy(({ value }) => value());
+  const testCount = inter.testBy(({ context }) => context(s => s.count));
+
+  it(...inter.start);
+  it(...testValue('Initial state', 'idle'));
+  it(...testCount('Initial count', 0));
+  it(...inter.send('INCREMENT'));
+  it(...testCount('Count incremented', 1));
+  it(...inter.stop);
+});
+```
+
+### API Reference
+
+#### `createTests(vi, interpreter)`
+
+Creates a test wrapper for an interpreter with helpful testing methods.
+
+**Parameters:**
+
+- `vi`: Vitest utilities instance
+- `interpreter`: The interpreter instance to test
+
+**Returns:** `InterpreterTest` instance with the following methods:
+
+#### Test Methods
+
+- **`testBy(fn)`** - Create a custom test function
+
+  ```typescript
+  const testValue = inter.testBy(({ value }) => value());
+  const testContext = inter.testBy(({ context }) => context(s => s.data));
+  ```
+
+- **`matches(...values)`** - Assert exact state match
+
+  ```typescript
+  it(...inter.matches('idle', 'active'));
+  ```
+
+- **`contains(...values)`** - Assert state contains values
+
+  ```typescript
+  it(...inter.contains('working', 'active'));
+  ```
+
+- **`hasTags(...tags)`** - Assert state has specific tags
+  ```typescript
+  it(...inter.hasTags('loading', 'visible'));
+  ```
+
+#### Control Methods
+
+- **`start`** - Start the interpreter
+- **`stop`** - Stop the interpreter
+- **`pause`** - Pause the interpreter
+- **`resume`** - Resume the interpreter
+- **`send(event)`** - Send an event
+- **`sendUI(event)`** - Send a UI event
+- **`dispose`** - Dispose the interpreter
+
+#### Timer Helper
+
+- **`createFakeWaiter`** - Create a fake timer waiter
+  ```typescript
+  const wait = inter.createFakeWaiter.withDefaultDelay(1000);
+  it(...wait()); // Wait 1000ms
+  it(...wait(2)); // Wait 2000ms (2 × 1000ms)
+  ```
+
+### Testing UI Thread
+
+```typescript
+const interpreter = createInterpreter({
+  machine: myMachine,
+  options: { context: { count: 0 } },
+  uiThread: { counter: 10 },
+});
+
+const inter = createTests(vi, interpreter);
+const counterUI = inter.testBy(({ ui }) => ui(s => s?.counter));
+
+it(...inter.start);
+it(...counterUI('Initial UI counter', 10));
+it(...inter.sendUI({ type: 'UPDATE', payload: 42 }));
+it(...counterUI('Updated UI counter', 42));
+```
 
 <br/>
 
@@ -15,6 +144,11 @@ MIT
 <summary>
 ...
 </summary>
+
+## **[0.2.1] - 2025/11/29** => _17:30_
+
+- Add peer dependencies for better compatibility
+- Enhance package configuration
 
 ### Version [0.0.1] --> _date & hour_
 
