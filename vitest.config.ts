@@ -1,5 +1,6 @@
 import { aliasTs } from '@bemedev/vitest-alias';
 import { exclude } from '@bemedev/vitest-exclude';
+import solidPlugin from 'vite-plugin-solid';
 import { defineConfig } from 'vitest/config';
 import tsconfig from './tsconfig.json';
 
@@ -7,6 +8,7 @@ export default defineConfig({
   plugins: [
     aliasTs(tsconfig as any),
     exclude({ ignoreCoverageFiles: ['**/index.ts'] }),
+    solidPlugin(),
   ],
   test: {
     bail: 10,
